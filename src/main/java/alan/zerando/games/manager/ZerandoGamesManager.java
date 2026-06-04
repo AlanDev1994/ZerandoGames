@@ -1,6 +1,7 @@
 package alan.zerando.games.manager;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,29 @@ public class ZerandoGamesManager {
 	public List<ZerandoGames> buscarGamesAzerar(){
 		
 		return zerandoGamesRepository.findAll();
+	}
+	
+	public ZerandoGames criarNovoGame(ZerandoGames zerandoGames) {
+		
+		if (Objects.isNull(zerandoGames.getDataInicio())
+		        || Objects.isNull(zerandoGames.getNomeGame())
+		        || zerandoGames.getNomeGame().isBlank()
+		        || zerandoGames.getGenero().isBlank()
+		        || zerandoGames.getTipo().isBlank()) {
+
+		    throw new IllegalArgumentException("Todos os campos são obrigatórios");
+		}
+		
+		zerandoGamesRepository.save(zerandoGames);
+		
+		return zerandoGames;
+	}
+	
+	public void excluirGame(Long idGame) {
+		zerandoGamesRepository.deleteById(idGame);
+	}
+	
+	public void editarGame(ZerandoGames zerandoGames) {
+		zerandoGamesRepository.save(zerandoGames);
 	}
 }
