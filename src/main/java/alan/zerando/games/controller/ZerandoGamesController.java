@@ -43,8 +43,25 @@ public class ZerandoGamesController {
 	}
 	
 	@DeleteMapping("/delete-game")
-	public void deletarGame(Long idGame) {
-		zerandoGamesManager.excluirGame(idGame);
+	public ResponseEntity<DefaultResponse> deletarGame(@RequestBody ZerandoGames zerandoGames) {
+		
+		DefaultResponse response = new DefaultResponse();
+		
+		try {
+			response.setData(zerandoGames);
+			response.setStatus(HttpStatus.OK.value());
+			response.setMsg("Game Excluido com Sucesso");
+			response.setDataHora(LocalDateTime.now());
+			zerandoGamesManager.excluirGame(zerandoGames.getIdGame());
+			
+		}catch (Exception e) {
+			response.setMsg("Erro ao excluir Game");
+			response.setDataHora(LocalDateTime.now());
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+		
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@PostMapping("/criar-novo-game")
