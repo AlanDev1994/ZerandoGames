@@ -23,8 +23,23 @@ public class ZerandoGamesController {
 	private ZerandoGamesManager zerandoGamesManager;
 	
 	@GetMapping("/get-games-zerar")
-	public List<ZerandoGames> buscarGamesAzerar(){
-		return zerandoGamesManager.buscarGamesAzerar();
+	public ResponseEntity<DefaultResponse> buscarGamesAzerar(){
+		
+		DefaultResponse response = new DefaultResponse();
+		
+		try {
+			response.setData(zerandoGamesManager.buscarGamesAzerar());
+			response.setStatus(HttpStatus.OK.value());
+			response.setMsg("Game Consultado com Sucesso");
+			response.setDataHora(LocalDateTime.now());
+			
+		}catch (Exception e) {
+			response.setMsg("Erro ao Consultar Game");
+			response.setDataHora(LocalDateTime.now());
+			response.setStatus(HttpStatus.NOT_FOUND.value());
+		}
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete-game")
